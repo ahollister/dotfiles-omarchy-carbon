@@ -1,0 +1,210 @@
+:root {
+    --my-tab-height: 38px;
+    --my-tab-gap: 6px;
+/* Auto-hidden vertical tab bar: tint, blur and grain strength. */
+    --my-tab-glass-tint-strength: 80%;
+    --my-tab-glass-blur: 18px;
+    --my-tab-glass-noise-opacity: 0.5;
+}
+
+/*
+ * Put vertical tabs into normal document flow instead
+ * of Vivaldi's transform-based positioning.
+ */
+#tabs-container[aria-orientation="vertical"] .resize {
+    display: grid !important;
+    flex: unset !important;
+    grid-auto-rows: max-content;
+    gap: var(--my-tab-gap);
+}
+
+/*
+ * Remove intermediary layout wrappers from the grid.
+ */
+#tabs-container[aria-orientation="vertical"] .tab-strip,
+#tabs-container[aria-orientation="vertical"] .sync-and-trash-container {
+    display: contents !important;
+}
+
+/*
+ * Disable Vivaldi's calculated/translated positioning.
+ */
+#tabs-container[aria-orientation="vertical"] .tab-position,
+#tabs-container[aria-orientation="vertical"] .separator {
+    position: static !important;
+    transform: none !important;
+}
+
+/*
+ * Actual tab slot.
+ */
+#tabs-container[aria-orientation="vertical"] .tab-position {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: var(--my-tab-height) !important;
+}
+
+/*
+ * Let the visible tab fill the slot.
+ */
+#tabs-container[aria-orientation="vertical"] .tab {
+    height: 100% !important;
+    max-height: none !important;
+}
+
+/*
+ * Centre favicon/title vertically.
+ */
+#tabs-container[aria-orientation="vertical"] .tab .tab-header {
+    height: 100% !important;
+    flex-basis: var(--my-tab-height) !important;
+}
+
+/*
+ * Remove Vivaldi's original wrapper height restriction.
+ */
+#tabs-container[aria-orientation="vertical"] .tab-wrapper {
+    max-height: none !important;
+}
+
+#tabs-container[aria-orientation="vertical"] .newtab {
+    display: none !important;
+}
+
+.window-buttongroup {
+    display: none !important;
+}
+
+/*
+ * Frosted-glass surface for the auto-hidden left tab bar.
+ *
+ * Vivaldi gives both the auto-hide wrapper and its tabbar child an opaque
+ * background, so both need to be cleared for backdrop-filter to be visible.
+ */
+#browser.auto-hide > .auto-hide-wrapper.left:has(#tabs-tabbar-container) {
+    /* --colorBg is defined on #browser, so calculate this variable here. */
+    --my-tab-glass-tint: color-mix(
+        in srgb,
+        var(--colorBg) var(--my-tab-glass-tint-strength),
+        transparent
+    );
+    background: rgba(24, 24, 27, 0.84) !important;
+    background: var(--my-tab-glass-tint) !important;
+    -webkit-backdrop-filter: blur(var(--my-tab-glass-blur)) saturate(115%);
+    backdrop-filter: blur(var(--my-tab-glass-blur)) saturate(115%);
+    border: 1px solid color-mix(in srgb, var(--colorFg) 12%, transparent);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 color-mix(in srgb, white 8%, transparent);
+    isolation: isolate;
+}
+
+#browser.auto-hide
+    > .auto-hide-wrapper.left:has(#tabs-tabbar-container)
+    .tabbar-wrapper,
+#browser.auto-hide
+    > .auto-hide-wrapper.left:has(#tabs-tabbar-container)
+    #tabs-tabbar-container {
+    background: transparent !important;
+}
+
+/* Fine monochrome grain, kept behind the tabs so text and icons stay crisp. */
+#browser.auto-hide
+    > .auto-hide-wrapper.left:has(#tabs-tabbar-container)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: var(--my-tab-glass-noise-opacity);
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+
+
+
+/* TAB BAR - (non auto-hide) */
+.tabbar-wrapper {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at 10% 95%,
+            rgba(105, 80, 190, 0.20),
+            transparent 40%
+        ),
+        radial-gradient(
+            circle at 95% 80%,
+            rgba(40, 125, 145, 0.15),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            #18171d 0%,
+            #12151a 55%,
+            #101216 100%
+        );
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+}
+.tabbar-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+.tabbar-wrapper > * {
+    position: relative;
+    z-index: 1;
+}
+
+.tabbar-wrapper .tab {
+    margin: 0 7px;
+    border-radius: 5px !important;
+}
+
+#browser.unified-ui-transparent .tab-wrapper:hover .tab:not(.active), 
+#browser.transparent-tabbar .tab-wrapper:hover .tab:not(.active) {
+    background: rgba(0,0,0,0.4);
+}
+
+#browser .tabbar-wrapper .tab.active {
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,1);
+}
+
+.density-on .UrlBar-SearchField,
+.density-on .UrlBar-AddressField {
+    height: 40px;
+    padding: 0 10px;
+    width: 100% !important;
+    margin: 0 auto !important;
+    max-width: 480px;
+    left: 50% !important;
+    transform: translate(-50%, 20%) !important;
+    pointer-events: auto;
+}
+
+.density-on:is(.address-top-off, .address-bottom-off) .UrlBar-SearchField:not(:focus-within),
+.density-on:is(.address-top-off, .address-bottom-off) .UrlBar-AddressField:not(:focus-within) {
+    pointer-events: none;
+}
+
+
+
+
+.density-on.tabs-left .tab:not(.tab-accordion, .tab-in-accordion) + .svg-tab-stack,
+.density-on.tabs-left .tab:not(.tab-accordion, .tab-in-accordion) + .svg-tab-selection,
+.density-on.tabs-right .tab:not(.tab-accordion, .tab-in-accordion.tab-first-in-group) + .svg-tab-stack, 
+.density-on.tabs-right .tab:not(.tab-accordion, .tab-in-accordion.tab-first-in-group) + .svg-tab-selection {
+    max-height: 40px;
+    height: 40px;
+    left: 5px;
+    width: calc(100% - 10px);
+}
