@@ -29,10 +29,23 @@
 ;; refresh your font settings. If Emacs still can't find your font, it likely
 ;; wasn't installed correctly. Font issues are rarely Doom issues!
 
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+;; Keep Doom in sync with the current Omarchy theme and font.
+(load (expand-file-name "omarchy" doom-emacs-dir))
+(setq doom-theme 'omarchy)
+
+;; Use the current Omarchy theme's subdued selection color for the modeline
+;; instead of its bright accent color. Reapply it after either Doom or Omarchy
+;; reloads the theme.
+(defun my/omarchy-soften-modeline (&rest _)
+  (when (boundp 'omarchy-color-sel-bg)
+    (set-face-attribute 'mode-line nil
+                        :foreground omarchy-color-fg
+                        :background omarchy-color-sel-bg
+                        :box nil)))
+
+(advice-add 'omarchy-apply-theme :after #'my/omarchy-soften-modeline)
+(add-hook 'doom-load-theme-hook #'my/omarchy-soften-modeline)
+(my/omarchy-soften-modeline)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
