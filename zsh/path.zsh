@@ -5,4 +5,5 @@ path=(
   "$HOME/bin"
   /usr/local/bin
   $path
+  "$HOME/.tmuxifier/bin"
 )

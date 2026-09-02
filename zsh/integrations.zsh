@@ -15,6 +15,10 @@ if command -v thefuck >/dev/null 2>&1; then
   eval "$(thefuck --alias)"
 fi
 
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+
 [[ -r "$HOME/zsh-z/zsh-z.plugin.zsh" ]] && source "$HOME/zsh-z/zsh-z.plugin.zsh"
 
 [[ -r "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
