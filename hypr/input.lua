@@ -56,7 +56,6 @@
 -- hl.gesture({ fingers = 3, direction = "left", action = function() hl.dispatch(hl.dsp.focus({ direction = "l" })) end })
 -- hl.gesture({ fingers = 3, direction = "right", action = function() hl.dispatch(hl.dsp.focus({ direction = "r" })) end })
 
-
 -- lofree devices showing up with '-x' suffixes.
 -- this is a hacky way to make sure my modifications apply.
 hl.device({
@@ -74,5 +73,7 @@ end
 hl.config({
 	input = {
 		follow_mouse = 0,
+		sensitivity = 0,
+		accel_profile = "flat",
 	},
 })
